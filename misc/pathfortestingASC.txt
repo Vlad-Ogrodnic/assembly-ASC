@@ -1,0 +1,79 @@
+PATH
+<./tests/task1/add/2.in
+
+
+
+
+
+
+
+
+et_add: #12 desc,d,ret,ebp,
+xor %eax, %eax
+pushl %ebp
+mov %esp,%ebp
+movl 8(%ebp),%eax #d in eax
+xorl %edx, %edx
+divl opt #eax=20/8=2 edx=4
+movl $v, %esi
+xorl %ebx,%ebx
+
+#MAI AM DE ADAUGAT DACA UN ELEMENT CARE A FOST ADAUGAT DEJA INCERACA SA FIE ADAUGAT NU SE INTAMPLA NIMIC
+cautare:
+cmpb $0,(%esi,%ebx,1) #verifica daca al ebx lea element din v este 0 
+jne incebx
+je test
+incebx:
+incl %ebx
+jmp cautare
+test: 
+mov %ebx,c 
+jmp e0
+
+
+e0:
+#verific daca incape 
+incl %ebx
+cmpb $0,(%esi,%ebx,1)
+je incebx2
+jne amAflatSpatiu
+incebx2:
+incl %ebx
+jmp e0
+amAflatSpatiu:
+movl %ebx, %ecx #il mut pe ebx care e pozitia ultimului 0 in ecx
+subl c, %ecx
+movl %ecx, amspatiu # amspatiu=cat spatiu am la dispozitie pentru a imi pune valorile
+cmpl $1, %ecx #PENTRU CAND IESE DIN VECTOR
+jl add_exit
+cmpl amspatiu, %eax
+jle ok
+jg cautare
+#sfarsit cautare
+
+
+ok:
+movl $v, %esi
+movl c, %ecx #ecx= pozitia de unde incep sa adaug
+addl %ecx, %eax
+cmpl $0, %edx 
+je add_rest0
+jne add_restd0
+add_rest0:
+cmpl %eax, %ecx
+jge add_exit
+movl 12(%ebp),%edx #desc in edx 
+addb %dl, (%esi,%ecx,1)
+incl %ecx
+jmp add_rest0
+add_restd0:
+cmpl %eax, %ecx
+jg add_exit
+movl 12(%ebp),%edx #desc in edx
+addb %dl, (%esi,%ecx,1)
+incl %ecx
+jmp add_restd0
+add_exit:
+popl %ebp
+
+ret
